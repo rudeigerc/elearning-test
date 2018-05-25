@@ -30,7 +30,7 @@ def login(pytestconfig, selenium):
         password.send_keys(pytestconfig.getini('password'))
         selenium.find_element_by_class_name('commandbutton').click()
         wait = WebDriverWait(selenium, 10)
-        wait.until(lambda _: selenium.current_url == 'http://elearning.se.sjtu.edu.cn/announcement/index.asp')
+        wait.until([selenium.current_url == 'http://elearning.se.sjtu.edu.cn/announcement/index.asp'])
         cookies = selenium.get_cookies()[0]
         with open('cookies.pkl', 'wb') as f:
             pickle.dump(cookies, f)

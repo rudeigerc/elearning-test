@@ -22,10 +22,26 @@ $ pip install pytest
 $ pip install pytest-selenium
 ```
 
+## Config
+
+See `conftest.py` and `pytest.ini`.
+
+- username
+- password
+- file_path
+
 ## Run
 
 ```shell
 $ pytest --driver Chrome
+```
+
+## Generate Report
+
+Visit [pytest-html](https://github.com/pytest-dev/pytest-html) for more information.
+
+```shell
+$ pytest --driver Chrome --html=report.html
 ```
 
 ## Docs
