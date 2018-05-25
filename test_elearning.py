@@ -16,7 +16,7 @@ def selenium(selenium):
 
 
 @pytest.fixture(autouse=True)
-def login(selenium):
+def login(pytestconfig, selenium):
     selenium.get('http://elearning.se.sjtu.edu.cn/')
     if os.path.exists('cookies.pkl'):
         with open('cookies.pkl', 'rb') as f:
@@ -25,12 +25,12 @@ def login(selenium):
             selenium.add_cookie(cookies)
     else:
         username = selenium.find_element_by_name('loginname')
-        username.send_keys('')
+        username.send_keys(pytestconfig.getini('username'))
         password = selenium.find_element_by_name('password')
-        password.send_keys('')
+        password.send_keys(pytestconfig.getini('password'))
         selenium.find_element_by_class_name('commandbutton').click()
         wait = WebDriverWait(selenium, 10)
-        wait.until(lambda: selenium.current_url == 'http://elearning.se.sjtu.edu.cn/announcement/index.asp')
+        wait.until(lambda _: selenium.current_url == 'http://elearning.se.sjtu.edu.cn/announcement/index.asp')
         cookies = selenium.get_cookies()[0]
         with open('cookies.pkl', 'wb') as f:
             pickle.dump(cookies, f)
@@ -57,9 +57,9 @@ def test_checkbox(selenium):
     assert system_subscribe.is_selected() is True
 
 
-def test_upload(selenium):
+def test_upload(pytestconfig, selenium):
     photo = selenium.find_element_by_name('txtPhoto')
-    photo.send_keys('')
+    photo.send_keys(pytestconfig.getini('file_path'))
     assert photo.get_attribute('value') is not None
 
 
@@ -70,4 +70,3 @@ def test_combined_action(selenium):
     ActionChains(selenium).drag_and_drop(announcement, answer).perform()
     assert answer.get_attribute('value') == 'http://elearning.se.sjtu.edu.cn/announcement/'
     # assert True
-
