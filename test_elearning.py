@@ -40,6 +40,7 @@ def login(pytestconfig, selenium):
 
 def test_input(selenium):
     question = selenium.find_element_by_name('txtQuestion')
+    question.clear()
     question.send_keys('Software Testing')
     assert question.get_attribute('value') == 'Software Testing'
 
@@ -75,7 +76,7 @@ def test_checkbox(selenium):
 
     selenium.get('http://elearning.se.sjtu.edu.cn/profile.asp')
     system_subscribe = selenium.find_elements_by_xpath('//input[@type="checkbox"]')[0]
-    assert system_subscribe.is_selected() is True
+    assert system_subscribe.is_selected() is not is_selected
 
 
 def test_upload(pytestconfig, selenium):
