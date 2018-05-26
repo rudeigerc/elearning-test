@@ -30,7 +30,7 @@ def login(pytestconfig, selenium):
         password.send_keys(pytestconfig.getini('password'))
         selenium.find_element_by_class_name('commandbutton').click()
         wait = WebDriverWait(selenium, 10)
-        wait.until([selenium.current_url == 'http://elearning.se.sjtu.edu.cn/announcement/index.asp'])
+        wait.until(lambda _: selenium.current_url == 'http://elearning.se.sjtu.edu.cn/announcement/index.asp')
         cookies = selenium.get_cookies()[0]
         with open('cookies.pkl', 'wb') as f:
             pickle.dump(cookies, f)
@@ -66,7 +66,7 @@ def test_upload(pytestconfig, selenium):
 def test_combined_action(selenium):
     announcement = selenium.find_element_by_xpath('//a[@href="/announcement/"]')
     answer = selenium.find_element_by_name('txtAnswer')
-    # answer.send_keys('Software Testing')
     ActionChains(selenium).drag_and_drop(announcement, answer).perform()
+    wait = WebDriverWait(selenium, 10)
+    wait.until(lambda _: answer.get_attribute('value') == 'http://elearning.se.sjtu.edu.cn/announcement/')
     assert answer.get_attribute('value') == 'http://elearning.se.sjtu.edu.cn/announcement/'
-    # assert True
