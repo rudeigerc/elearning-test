@@ -43,10 +43,24 @@ def test_input(selenium):
     question.send_keys('Software Testing')
     assert question.get_attribute('value') == 'Software Testing'
 
+    submit_button = selenium.find_element_by_xpath('//a[@href="javascript:funUptdata();"]')
+    submit_button.click()
+
+    selenium.get('http://elearning.se.sjtu.edu.cn/profile.asp')
+    question = selenium.find_element_by_name('txtQuestion')
+    assert question.get_attribute('value') == 'Software Testing'
+
 
 def test_select(selenium):
     political_affiliation = Select(selenium.find_element_by_name('lstPolity'))
     political_affiliation.select_by_value('3')
+    assert political_affiliation.first_selected_option.get_attribute('value') is '3'
+
+    submit_button = selenium.find_element_by_xpath('//a[@href="javascript:funUptdata();"]')
+    submit_button.click()
+
+    selenium.get('http://elearning.se.sjtu.edu.cn/profile.asp')
+    political_affiliation = Select(selenium.find_element_by_name('lstPolity'))
     assert political_affiliation.first_selected_option.get_attribute('value') is '3'
 
 
@@ -54,6 +68,13 @@ def test_checkbox(selenium):
     system_subscribe = selenium.find_elements_by_xpath('//input[@type="checkbox"]')[0]
     assert system_subscribe.is_selected() is False
     system_subscribe.click()
+    assert system_subscribe.is_selected() is True
+
+    submit_button = selenium.find_element_by_xpath('//a[@href="javascript:funUptdata();"]')
+    submit_button.click()
+
+    selenium.get('http://elearning.se.sjtu.edu.cn/profile.asp')
+    system_subscribe = selenium.find_elements_by_xpath('//input[@type="checkbox"]')[0]
     assert system_subscribe.is_selected() is True
 
 
@@ -66,7 +87,7 @@ def test_upload(pytestconfig, selenium):
 def test_combined_action(selenium):
     announcement = selenium.find_element_by_xpath('//a[@href="/announcement/"]')
     answer = selenium.find_element_by_name('txtAnswer')
-    ActionChains(selenium).drag_and_drop(announcement, answer).perform()
+    ActionChains(selenium).move_to_element(answer).drag_and_drop(announcement, answer).perform()
     wait = WebDriverWait(selenium, 10)
     wait.until(lambda _: answer.get_attribute('value') == 'http://elearning.se.sjtu.edu.cn/announcement/')
     assert answer.get_attribute('value') == 'http://elearning.se.sjtu.edu.cn/announcement/'
