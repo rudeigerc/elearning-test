@@ -52,9 +52,9 @@ def test_select(selenium):
 
 def test_checkbox(selenium):
     system_subscribe = selenium.find_elements_by_xpath('//input[@type="checkbox"]')[0]
-    assert system_subscribe.is_selected() is False
+    is_selected = system_subscribe.is_selected()
     system_subscribe.click()
-    assert system_subscribe.is_selected() is True
+    assert system_subscribe.is_selected() is not is_selected
 
 
 def test_upload(pytestconfig, selenium):
@@ -64,9 +64,9 @@ def test_upload(pytestconfig, selenium):
 
 
 def test_combined_action(selenium):
-    announcement = selenium.find_element_by_xpath('//a[@href="/announcement/"]')
-    answer = selenium.find_element_by_name('txtAnswer')
-    ActionChains(selenium).drag_and_drop(announcement, answer).perform()
-    wait = WebDriverWait(selenium, 10)
-    wait.until(lambda _: answer.get_attribute('value') == 'http://elearning.se.sjtu.edu.cn/announcement/')
-    assert answer.get_attribute('value') == 'http://elearning.se.sjtu.edu.cn/announcement/'
+    remark = selenium.find_element_by_name('txtRemark')
+    remark.send_keys('Software Testing')
+    assert remark.get_attribute('value') == 'Software Testing'
+    reset = selenium.find_element_by_xpath('//a[@href="javascript:funReset();"]')
+    ActionChains(selenium).move_to_element(reset).click().perform()
+    assert len(remark.get_attribute('value')) == 0
